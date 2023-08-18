@@ -1,11 +1,11 @@
 
 from datetime import datetime, timedelta
 from typing import Annotated
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import Depends,HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from database.db_connection import SessionLocal,get_db
+from database.db_connection import SessionLocal
 from models.orm_models import UserDB
 from schema import schemas
 
@@ -35,10 +35,12 @@ def get_user(username):
     db = SessionLocal()
     try:
         user = db.query(UserDB).filter(UserDB.username ==username).first()
+        print("username",user.username)
+        return user
     except Exception as e:
         print("failed to get_user function:",e)
-    print("username",user.username)
-    return user
+    finally:
+        db.close()
 
 
 def authenticate_user(username: str, password: str):

@@ -7,10 +7,20 @@ import datetime
 
 class Create_User(BaseModel):
     username: str
-    email: EmailStr | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
+    email: EmailStr 
+    full_name: str 
     password: str
+    mobile_no: str
+    disabled: bool 
+
+
+class UserUpdate(BaseModel):
+    username: Optional[str]
+    email: Optional[EmailStr]
+    full_name: Optional[str]
+    mobile_no: Optional[str]
+    disabled: Optional[bool]
+    
 
 class UserResponse(BaseModel):
     id: int
@@ -31,9 +41,10 @@ class TokenData(BaseModel):
 
 class User(BaseModel):
     username: str
-    email: EmailStr | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
+    email: EmailStr
+    full_name: str
+    mobile_no: str 
+    disabled: bool 
 
 
 class UserInDB(User):
@@ -42,7 +53,7 @@ class UserInDB(User):
 
 
 class MessageBase(BaseModel):
-    sending_to: str
+    send_to: str
     content: Optional[str] = None
 
 class MessageCreate(MessageBase):

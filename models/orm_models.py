@@ -12,6 +12,7 @@ class UserDB(Base):
     email = Column(String, unique=True, nullable=True)
     full_name = Column(String, nullable=True)
     hashed_password = Column(String)
+    mobile_no =Column(String,nullable=False)
     disabled = Column(Boolean, nullable=False)
 
 
@@ -19,8 +20,8 @@ class Message(Base):
     __tablename__ = "messages"
 
     message_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    sending_to = Column(String, ForeignKey("users_chat_account.username"))
-    username= Column(String, ForeignKey("users_chat_account.username"))
+    send_to = Column(String, ForeignKey("users_chat_account.username", ondelete="SET NULL"))
+    from_to = Column(String, ForeignKey("users_chat_account.username", ondelete="SET NULL"))
     content = Column(Text,nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
 
