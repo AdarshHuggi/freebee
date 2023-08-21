@@ -1,2 +1,2 @@
 # freebee 
-Freebee app is devloped using the fastapi its chat application
+Freebee fastAPI app contains the Login and and Registration, individual chat API endpoints   
