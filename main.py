@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from models import model
 from database.db_connection import Base,engine
-from routers import user,auth,chat
+from routers import user,auth,chat,file_upload
 
 
 
@@ -25,6 +25,7 @@ app.add_middleware(
 app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(chat.router)
+app.include_router(file_upload.router)
 
 
 @app.get("/")
