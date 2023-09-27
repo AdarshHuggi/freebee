@@ -6,7 +6,6 @@ from database.db_connection import Base,engine
 from routers import user,auth,chat,file_upload
 
 
-
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
