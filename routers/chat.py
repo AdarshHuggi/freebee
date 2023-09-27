@@ -51,3 +51,39 @@ def delete_message(message_id: int,db: Session = Depends(get_db),current_user: s
     db.commit()
 
     return {"message": "Message deleted successfully"}
+
+@router.get("/sent_items/")
+def get_sent_items(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
+    # Get the username of the current user
+    username = current_user.username
+
+    # Retrieve sent items/messages for the current user
+    sent_items = db.query(Message).filter(Message.from_to == username).all()
+
+    if not sent_items:
+        return {"message": "No sent messages found"}
+
+    # You may want to serialize the sent_items to JSON or another suitable format
+    # For simplicity, we assume Message has a 'to_user' field for the recipient's username
+    serialized_items = [{"message_id": item.message_id, "content": item.content, "to_user": item.send_to} for item in sent_items]
+
+    return {"sent_items": serialized_items}
+
+
+
+@router.get("/received_items/")
+def get_received_items(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
+    # Get the username of the current user
+    username = current_user.username
+
+    # Retrieve sent items/messages for the current user
+    received_items = db.query(Message).filter(Message.send_to == username).all()
+
+    if not received_items:
+        return {"message": "No received messages found"}
+
+    # You may want to serialize the sent_items to JSON or another suitable format
+    # For simplicity, we assume Message has a 'to_user' field for the recipient's username
+    serialized_items = [{"message_id": item.message_id, "content": item.content, "from_user": item.from_to} for item in received_items]
+
+    return {"received_items": serialized_items}
