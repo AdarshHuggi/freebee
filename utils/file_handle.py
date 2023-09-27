@@ -38,3 +38,12 @@ def save_file_upload_to_disk(file_obj, prefix='', save_dir='', sub_dir=''):
 
 def get_current_dt_str() -> str:
     return datetime.now(tz=pytz.timezone('Asia/Kolkata')).strftime("%Y%m%d_%H%M%S")
+
+# Define a function to check file size
+def check_file_size(file):
+    max_size = 4 * 1024 * 1024  # 4 MB
+    chunk = file.read(max_size)
+    if not chunk:
+        return False
+    return True
+
