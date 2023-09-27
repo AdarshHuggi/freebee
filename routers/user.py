@@ -12,6 +12,7 @@ router = APIRouter(prefix="/users",tags=['Users'])
 @router.get("/current_user_data/", response_model=User)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
     print("current_user",current_user.id)
+    print("user_name",current_user.username)
     return current_user
 
 
