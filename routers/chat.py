@@ -15,19 +15,18 @@ router = APIRouter(
 async def send_message(message: MessageBase,db:Session = Depends(get_db), current_user: str =Depends(get_current_user)):
 
     # Check if the receiver_id exists
-    receiver_exists=get_user(message.send_to)
-   
+    receiver_exists=get_user(message.user_to)
     if not receiver_exists:
         raise HTTPException(status_code=404, detail="Receiver not present in the database")
     try:
-        new_msg = Message(from_to=current_user.username, **message.dict())
+        new_msg = Message(user_from=current_user.username, **message.dict())
         db.add(new_msg)
         db.commit()
         db.refresh(new_msg)
         
         return {
-            "from_to": current_user.username,
-            "send_to": message.send_to,
+            "user_from": current_user.username,
+            "user_to": message.user_to,
             "content": message.content
         }
     except Exception as e:
@@ -58,14 +57,14 @@ def get_sent_items(db: Session = Depends(get_db), current_user: str = Depends(ge
     username = current_user.username
 
     # Retrieve sent items/messages for the current user
-    sent_items = db.query(Message).filter(Message.from_to == username).all()
+    sent_items = db.query(Message).filter(Message.user_from == username).all()
 
     if not sent_items:
         return {"message": "No sent messages found"}
 
     # You may want to serialize the sent_items to JSON or another suitable format
     # For simplicity, we assume Message has a 'to_user' field for the recipient's username
-    serialized_items = [{"message_id": item.message_id, "content": item.content, "to_user": item.send_to} for item in sent_items]
+    serialized_items = [{"message_id": item.message_id, "content": item.content, "to_user": item.user_to} for item in sent_items]
 
     return {"sent_items": serialized_items}
 
@@ -77,13 +76,13 @@ def get_received_items(db: Session = Depends(get_db), current_user: str = Depend
     username = current_user.username
 
     # Retrieve sent items/messages for the current user
-    received_items = db.query(Message).filter(Message.send_to == username).all()
+    received_items = db.query(Message).filter(Message.user_to == username).all()
 
     if not received_items:
         return {"message": "No received messages found"}
 
     # You may want to serialize the sent_items to JSON or another suitable format
     # For simplicity, we assume Message has a 'to_user' field for the recipient's username
-    serialized_items = [{"message_id": item.message_id, "content": item.content, "from_user": item.from_to} for item in received_items]
+    serialized_items = [{"message_id": item.message_id, "content": item.content, "from_user": item.user_from} for item in received_items]
 
     return {"received_items": serialized_items}
